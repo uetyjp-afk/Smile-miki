@@ -22,6 +22,12 @@ input[type=text],input[type=number],textarea{width:100%;border:1px solid var(--l
 .bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.go{flex:1;min-width:180px;border:0;border-radius:10px;background:var(--ac);color:#fff;padding:12px;font:inherit;font-weight:700;cursor:pointer}.go:disabled{opacity:.5}
 .sub{border:1px solid var(--ln);background:transparent;color:var(--tx);border-radius:10px;padding:11px 14px;font:inherit;cursor:pointer}
 #msg{font-size:12.5px;color:var(--mu);margin-top:6px;min-height:1.4em}.hint{font-size:12px;color:var(--mu)}
+.cdpanel{border:1.5px solid var(--ac);background:var(--ac2);border-radius:10px;padding:8px 11px;font-weight:700;margin:2px 0 8px;line-height:1.7}
+.cdpanel .cdnum{font-size:17px;letter-spacing:.5px}
+.cdpanel .cdmu{font-weight:400;color:var(--mu);font-size:12.5px}
+.cdline{border:1.5px solid var(--ac);background:var(--ac2);border-radius:9px;padding:5px 10px;font-weight:700;margin:0 0 10px;line-height:1.6;font-size:14px}
+.cdline .cdnum{font-size:16px;letter-spacing:.5px}
+.cdline .cdmu{font-weight:400;color:var(--mu);font-size:12.5px}
 @media print{header,nav,#ui,.bar,#msg{display:none!important}body{background:#fff}main{display:block;padding:0}#pv{border:0;padding:0;position:static}.cv{max-width:none;border:0;width:100%}}
 </style><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Smile注文書"></head><body><div id="splash" class="splash"><div>PARI MIKI Smile注文書</div><div class="spinner"></div><div>読み込み中です。しばらくお待ちください</div></div>
 <header><div class="brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjMzliODZiIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTQ3YjRhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSIzMiIgZmlsbD0idXJsKCNnKSIvPjxjaXJjbGUgY3g9IjY0IiBjeT0iNjIiIHI9IjM5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuOTYiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjU1IiByPSI1IiBmaWxsPSIjMTQ3YjRhIi8+PGNpcmNsZSBjeD0iNzgiIGN5PSI1NSIgcj0iNSIgZmlsbD0iIzE0N2I0YSIvPjxwYXRoIGQ9Ik00NSA3MmM2IDEyIDMyIDE2IDM5LTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YxNmI3YSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOTEgMzZjMTMgMSAxNyAxMCAxNCAxOS0yIDYtNyA5LTEzIDkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y0YjY0ZSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjY3IiByPSI3IiBmaWxsPSIjZjRiNjRlIi8+PHBhdGggZD0iTTI3IDkxYzEwIDEwIDIyIDE2IDM3IDE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNGI2NGUiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOSIvPjwvc3ZnPg==" alt="Smileアイコン"><div><h1>PARI MIKI Smile注文書</h1><p>NJH ユニトロン注文書 入力アプリ</p></div></div><p>原本PDFに位置を合わせて入力内容を転記します。店名・担当者・電話番号は次回も使えるよう端末内に保存します。</p></header>
@@ -69,7 +75,8 @@ function build(){nav();$('bg').src=BG[cur.pdf-1];const u=$('ui');u.innerHTML='';
   else if(t=='nm'){u.appendChild(el('h2',0,'その他'));const b=chips(['名入れ'],()=>V[f.k]?0:undefined,x=>{V[f.k]=x===0;if(!V[f.k])V.nmText='';build()});u.appendChild(b);const inp=el('input',{type:'text',maxLength:12,value:V.nmText||'',placeholder:'名入れ内容（12文字以内）',autocomplete:'off',disabled:!V[f.k]});inp.oninput=()=>{V.nmText=inp.value.slice(0,12);draw()};u.appendChild(row('名入れ入力',inp));u.appendChild(el('p',{className:'date-help'},'名入れを選択すると入力できます。ひらがな・カタカナ・アルファベットのみ。'))}
   else if(t=='r'){const names=f.o.map(o=>o[0]);
    if(f.e){['R','L'].forEach(e=>{if(!act(e))return;const block=el('div',{className:'ear-choice '+e});block.appendChild(el('div',{className:'ear-label'},requiredLabel(f.l+'・'+EN[e],f.k)));block.appendChild(chips(names,()=>V[f.k+e],x=>V[f.k+e]=x));u.appendChild(block)})}
-   else u.appendChild(row(requiredLabel(f.l,f.k),chips(names,()=>V[f.k],x=>V[f.k]=x)))}});
+   else u.appendChild(row(requiredLabel(f.l,f.k),chips(names,()=>V[f.k],x=>V[f.k]=x)))}
+  if(f.k=='g'||f.k=='mdl')u.appendChild(el('div',{id:'cdline',className:'cdline'}))});
  if(cur.id=='smr'){u.appendChild(el('h2',0,'備考欄'));const nt=el('textarea',{rows:3,value:V.smrNote||'',placeholder:'注文書の備考欄に記入する内容（任意）'});nt.oninput=()=>{V.smrNote=nt.value;draw()};u.appendChild(row('自由記入',nt))}
  if(cur.audio){u.appendChild(el('h2',0,'オージオグラム（dB）'));const a=el('div',{className:'au'}),fr=Object.keys(cur.audio.x);
   let h='<table><tr><th></th>'+fr.map(x=>'<th>'+(x>=1000?x/1000+'k':x)+'</th>').join('')+'</tr>';
@@ -77,9 +84,11 @@ function build(){nav();$('bg').src=BG[cur.pdf-1];const u=$('ui');u.innerHTML='';
   a.innerHTML=h+'</table>';a.oninput=ev=>{const i=ev.target;V['a'+i.dataset.e+i.dataset.f]=i.value;draw()};u.appendChild(a);
   const m=el('input',{type:'text',value:V.mdate||'',placeholder:'測定日 例 11/4'});m.oninput=()=>{V.mdate=m.value;draw()};u.appendChild(row('測定日',m))}
  if(cur.note){u.appendChild(el('h2',0,'備考・特記事項'));
-  const c=chips(['商品コードを自動記載'],()=>V.auto?0:undefined,x=>V.auto=x===0);u.appendChild(c);
   const t=el('textarea',{rows:2,value:V.free||'',placeholder:'追加の特記事項（任意・1行ごとに改行）'});t.oninput=()=>{V.free=t.value;draw()};u.appendChild(row('',t));
   u.appendChild(el('p',{className:'hint'},'片耳→片耳コード／両耳→両耳コードを装用耳の選択から自動で選びます。有料オプションは選択内容を注文書へ反映します。'))}
+ u.appendChild(el('h2',0,'商品コード'));
+ const cdp=el('div',{id:'cdpanel',className:'cdpanel'});u.appendChild(cdp);
+ const cdb=el('button',{type:'button',className:'sub'},'🔍 商品コード一覧・検索');cdb.onclick=cdOpen;u.appendChild(cdb);
  const acts=el('div',{className:'mini-actions'});const clear=el('button',{type:'button'},'この入力をクリア');clear.onclick=()=>{['bY','bM','bD','age','cust','kana','free','smrNote'].forEach(k=>delete V[k]);build()};acts.appendChild(clear);u.appendChild(acts);draw()}
 function codes(){const o=[],E=V.ears,k=cur.id,pick=(f,i)=>(cur.f.find(x=>x.k==f)||{o:[]}).o[i];
  const g=pick('g',V.g);if(k=='moxi'&&g){const n=g[0].slice(-1),c=CD.moxi[n];if(c)o.push('商品コード '+c[E=='B'?1:0]+'（Moxi S-R '+n+' '+EN[E]+'）');
@@ -88,6 +97,26 @@ function codes(){const o=[],E=V.ears,k=cur.id,pick=(f,i)=>(cur.f.find(x=>x.k==f)
   const ch=pick('ch',V.ch);if(sh[0]=='充電式カナル'&&ch&&ch[0]!='不要')o.push('充電器コード 71991400（Insera R 充電器）')}}
  if(k=='ez'&&g){const n=g[0].slice(-1),c=CD.ez[n],i=E=='B'?2:E=='R'?0:1;o.push('商品コード '+c[i]+'（Insera Smile EZ '+n+' '+EN[E]+'）')}
  return o}
+function cdLines(){if(cur.id=='rk')return['商品コード 73248890（Insera Smile R 9・注文書に印刷済み）','商品コード 73248690（Insera Smile R 5・注文書に印刷済み）','商品コード 73248790（Insera Smile EZ 5・注文書に印刷済み）','充電器コード 73293300（らくみみプレミア 充電器・注文書に印刷済み）'];return codes()}
+function cdInline(){if(cur.id=='rk'){const names=['Insera Smile R 9','Insera Smile R 5','Insera Smile EZ 5'],cds=[73248890,73248690,73248790];if(V.mdl==null)return[];const o=['商品コード '+cds[V.mdl]+'（'+names[V.mdl]+'・注文書に印刷済み）'];if(V.mdl<2)o.push('充電器コード 73293300（注文書に印刷済み）');return o}return codes()}
+function updCd(){const fmt=L=>L.map(t=>t.replace(/(\d{8})/,'<span class="cdnum">$1</span>')).join('<br>');const p=document.getElementById('cdpanel');if(p){const L=cdLines();p.innerHTML=L.length?fmt(L):'<span class="cdmu">グレード（Insera Smile-Rは形状も）を選ぶと、商品コードがここに表示されます</span>'}const q=document.getElementById('cdline');if(q){const M=cdInline();q.innerHTML=M.length?fmt(M):'<span class="cdmu">'+(cur.id=='rk'?'器種を選ぶと、商品コードがここに表示されます':'グレード（Insera Smile-Rは形状も）を選ぶと、商品コードがここに表示されます')+'</span>'}}
+const CDLIST=[];
+[9,7,5,3,1].forEach(n=>{const c=CD.moxi[n];CDLIST.push('Moxi S-R '+n+'　片耳：'+c[0]+'　両耳：'+c[1])});
+Object.keys(CD.smr).forEach(sh=>{[9,7,5,3,1].forEach(n=>{const c=CD.smr[sh][n];CDLIST.push('Insera Smile-R '+(sh=='充電式カナル'?'カナル':sh)+' '+n+'　片耳：'+c[0]+'　両耳：'+c[1])})});
+[5,1].forEach(n=>{const c=CD.ez[n];CDLIST.push('Insera Smile EZ '+n+'　右耳：'+c[0]+'　左耳：'+c[1]+'　両耳：'+c[2])});
+CDLIST.push('Moxi S-R用 S-R充電器　71991300','Moxi S-R用 Charger GO　71991200','Insera Smile-R カナル用 充電器　71991400');
+CDLIST.push('らくみみプレミア Insera Smile R 9　73248890（注文書に印刷済み）','らくみみプレミア Insera Smile R 5　73248690（注文書に印刷済み）','らくみみプレミア Insera Smile EZ 5　73248790（注文書に印刷済み）','らくみみプレミア 充電器　73293300（注文書に印刷済み）');
+function cdOpen(){let o=document.getElementById('cdModal');if(!o){o=el('div',{id:'cdModal'});o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:flex-start;justify-content:center;padding:14px;overflow:auto';
+ const box=el('div');box.style.cssText='background:var(--card);color:var(--tx);border-radius:14px;padding:16px;width:100%;max-width:520px;margin-top:4vh';
+ const ttl=el('b',0,'商品コード一覧・検索');ttl.style.fontSize='16px';box.appendChild(ttl);
+ const inp=el('input',{type:'text',placeholder:'コードや機種名で検索（例：71953／Moxi／EZ）'});inp.style.marginTop='10px';box.appendChild(inp);
+ const cnt=el('p',{className:'hint'});box.appendChild(cnt);
+ const lst=el('div');box.appendChild(lst);
+ const render=q=>{const rows=CDLIST.filter(t=>!q||t.includes(q));lst.innerHTML=rows.map(t=>'<div style="border-bottom:1px solid var(--ln);padding:7px 2px;font-size:14px">'+t.replace(/(\d{8})/g,'<b>$1</b>')+'</div>').join('')||'<p class="hint">該当するコードがありません</p>';cnt.textContent=rows.length+' 件'};
+ inp.oninput=()=>render(inp.value.trim());render('');
+ const cl=el('button',{type:'button',className:'sub'},'閉じる');cl.style.cssText='width:100%;margin-top:12px';cl.onclick=()=>o.style.display='none';box.appendChild(cl);
+ o.appendChild(box);o.onclick=e=>{if(e.target===o)o.style.display='none'};document.body.appendChild(o)}
+ o.style.display='flex';const i2=o.querySelector('input');if(i2)i2.focus()}
 const fit=(t,w,fs,a,x,y)=>{ctx.font=(fs*S)+'px '+FONT;const m=ctx.measureText(t).width/S;ctx.save();ctx.translate(x*S,y*S);let k=1;if(w&&m>w)k=w/m;ctx.scale(k,1);ctx.textAlign=a=='r'?'right':a=='c'?'center':'left';ctx.fillText(t,0,0);ctx.restore()};
 function chk(x,y,s=10){ctx.save();ctx.lineWidth=1.6*S;ctx.lineCap=ctx.lineJoin='round';ctx.strokeStyle='#0b2a6b';ctx.beginPath();ctx.moveTo((x-s*.34)*S,(y+s*.02)*S);ctx.lineTo((x-s*.08)*S,(y+s*.32)*S);ctx.lineTo((x+s*.42)*S,(y-s*.42)*S);ctx.stroke();ctx.restore()}
 function circ(x,y,r){ctx.save();ctx.lineWidth=1.2*S;ctx.strokeStyle='#0b2a6b';ctx.beginPath();ctx.arc(x*S,y*S,r*S,0,7);ctx.stroke();ctx.restore()}
@@ -104,13 +133,14 @@ function draw(){cv.width=595*S;cv.height=842*S;ctx.clearRect(0,0,cv.width,cv.hei
   if(t=='c'&&V[f.k])chk(f.p[0],f.p[1],f.s||10);
   if(t=='r'){if(f.e)['R','L'].forEach(e=>{if(act(e)&&V[f.k+e]!=null)mark(f,V[f.k+e],e)});else if(V[f.k]!=null)mark(f,V[f.k],'R')}});
  if(cur.em)chk(cur.em[V.ears][0],cur.em[V.ears][1],12);
- if(cur.note){const L=[...(V.auto?codes():[]),...nn(V.smrNote).split('\n').filter(Boolean),...nn(V.free).split('\n').filter(Boolean)],n=cur.note;L.slice(0,n.n).forEach((t,i)=>fit(t,n.w,n.fs,'l',n.x,n.y+i*n.lh));
-  if(cur.id=='ez'){const c=codes()[0];if(c&&V.auto)fit(c.split('（')[0].replace('商品コード ',''),172,9,'l',398,301)}}
+ if(cur.note){const L=[...codes(),...nn(V.smrNote).split('\n').filter(Boolean),...nn(V.free).split('\n').filter(Boolean)],n=cur.note;L.slice(0,n.n).forEach((t,i)=>fit(t,n.w,n.fs,'l',n.x,n.y+i*n.lh));
+  if(cur.id=='ez'){const c=codes()[0];if(c)fit(c.split('（')[0].replace('商品コード ',''),172,9,'l',398,301)}}
  if(cur.audio){const A=cur.audio,fr=Object.keys(A.x).map(Number),py=d=>A.y0+d*A.k;
   ['R','L'].forEach(e=>{if(!act(e))return;const pts=fr.filter(f=>nn(V['a'+e+f])!=='').map(f=>[A.x[f],py(+V['a'+e+f])]);if(!pts.length)return;
    ctx.save();ctx.strokeStyle=e=='R'?'#d01818':'#1747c8';ctx.lineWidth=.9*S;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0]*S,p[1]*S):ctx.moveTo(p[0]*S,p[1]*S));ctx.stroke();
    pts.forEach(p=>{ctx.fillStyle='#fff';if(e=='R'){ctx.beginPath();ctx.arc(p[0]*S,p[1]*S,3.4*S,0,7);ctx.fill();ctx.stroke()}else{const r=3.2*S,x=p[0]*S,y=p[1]*S;ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x+r,y-r);ctx.lineTo(x-r,y+r);ctx.lineWidth=1.3*S;ctx.stroke();ctx.lineWidth=.9*S}});ctx.restore()});
-  if(nn(V.mdate)){ctx.fillStyle='#0b2a6b';fit(nn(V.mdate),42,7,'l',A.dx,A.dy)}}}
+  if(nn(V.mdate)){ctx.fillStyle='#0b2a6b';fit(nn(V.mdate),42,7,'l',A.dx,A.dy)}}
+ updCd()}
 function hasField(k){return cur.f.some(f=>f.k==k)}
 function validateOrder(){const missing=[];const labels={shop:'貴店名',staff:'ご担当者',cust:'お客様名',shape:'形状',g:'グレード',pw:'パワー',ch:'充電器',rc:'レシーバーの種類',dm:'耳栓の種類'};['shop','staff','cust','shape','g','pw','ch','rc','dm'].forEach(k=>{if(!hasField(k))return;const f=cur.f.find(x=>x.k==k);if(f&&f.e){['R','L'].forEach(e=>{if(act(e)&&V[k+e]==null)missing.push(labels[k]+'（'+EN[e]+'）')})}else if(V[k]==null||V[k]==='')missing.push(labels[k])});if(V.nm){const n=String(V.nmText||'').trim();if(!n)missing.push('名入れ文字');else if(!namePattern.test(n))return{ok:false,message:'名入れは、ひらがな・カタカナ・アルファベットで入力してください。'}}return missing.length?{ok:false,message:'必須項目を入力してください：'+missing.join('、')}:{ok:true}}
 $('go').onclick=async()=>{const m=$('msg');const check=validateOrder();if(!check.ok){m.textContent=check.message;return}const missing=['shop','staff','cust'].filter(k=>!String(V[k]||'').trim());if(missing.length){m.textContent='未入力の必須項目があります：'+missing.map(k=>({shop:'貴店名',staff:'ご担当者',cust:'お客様名'}[k])).join('、');return}m.textContent='作成中…';
